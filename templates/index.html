@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huzaifa's TikTok</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Huzaifa's TikTok</h1>
+
+        <!-- Video Upload Form -->
+        <form id="uploadForm">
+            <label for="title">Video Title:</label>
+            <input type="text" id="title" name="title" required><br>
+
+            <label for="tags">Tags (comma-separated):</label>
+            <input type="text" id="tags" name="tags" required><br>
+
+            <label for="video">Upload Video:</label>
+            <input type="file" id="video" name="video" accept="video/*" required><br>
+
+            <button type="submit">Upload Video</button>
+        </form>
+
+        <hr>
+
+        <!-- Video Dashboard -->
+        <h2>Video Dashboard</h2>
+        <div id="dashboard"></div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
