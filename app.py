@@ -1,48 +1,29 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, render_template
 import os
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# Configure upload folder
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100 MB max file size
+# Set upload folder and allowed file types
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
-# Route: Serve the main page
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Function to check allowed file extensions
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-# Route: Upload video
-@app.route('/upload', methods=['POST'])
-def upload_video():
-    title = request.form.get('title', '')
-    tags = request.form.get('tags', '')
-    video = request.files.get('video')
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return 'No file part'
+        file = request.files['file']
+        if file.filename == '':
+            return 'No selected file'
+        if file and allowed_file(file.filename):
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(filename)
+            return 'File uploaded successfully'
+    return render_template('upload.html')
 
-    if not video:
-        return jsonify({"message": "No video file provided!"}), 400
-
-    # Save video
-    video_path = os.path.join(app.config['UPLOAD_FOLDER'], video.filename)
-    video.save(video_path)
-
-    return jsonify({"message": "Video uploaded successfully!"})
-
-# Route: Fetch dashboard videos
-@app.route('/videos')
-def get_videos():
-    video_files = os.listdir(UPLOAD_FOLDER)
-    return jsonify({"videos": video_files})
-
-# Route: Serve uploaded video files
-@app.route('/uploads/<filename>')
-def serve_video(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
-    app.run(host='0.0.0.0', port=8000)
