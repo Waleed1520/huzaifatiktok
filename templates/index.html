@@ -3,34 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Huzaifa's TikTok</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Huzaifa's TikTok - Login</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #222;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styling */
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ff3b3f;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin-bottom: 30px;
+        }
+
+        /* Upload Form */
+        form {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="file"], button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        input[type="text"], input[type="file"] {
+            background-color: #fff;
+            color: #333;
+        }
+
+        button {
+            background-color: #ff3b3f;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        button:hover {
+            background-color: #ff2a2d;
+        }
+
+        /* Video Dashboard */
+        #dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .video-item {
+            width: 500px;
+            height: 600px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-item:hover {
+            transform: scale(1.05);
+        }
+
+        .video-item video {
+            width: 100%;
+            height: 600px; /* Fixed height */
+            object-fit: cover; /* Ensures the video covers the area without distortion */
+            border-radius: 8px;
+        }
+
+        .video-item p {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #ff3b3f;
+        }
+
+        /* Media Query for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .video-item {
+                width: 100%;
+                height: 600px;
+                max-width: 400px; /* Limit width for large screens */
+            }
+        }
+
+        /* Login Form Styling */
+        #loginContainer {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+
+        #loginContainer h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #loginContainer input[type="text"],
+        #loginContainer input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #loginContainer button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #loginContainer button:hover {
+            background-color: #45a049;
+        }
+
+        #errorMsg {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Huzaifa's TikTok</h1>
 
-        <!-- Video Upload Form -->
-        <form id="uploadForm">
-            <label for="title">Video Title:</label>
-            <input type="text" id="title" name="title" required><br>
-
-            <label for="tags">Tags (comma-separated):</label>
-            <input type="text" id="tags" name="tags" required><br>
-
-            <label for="video">Upload Video:</label>
-            <input type="file" id="video" name="video" accept="video/*" required><br>
-
-            <button type="submit">Upload Video</button>
+    <!-- Login Form -->
+    <div id="loginContainer">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
         </form>
-
-        <hr>
-
-        <!-- Video Dashboard -->
-        <h2>Video Dashboard</h2>
-        <div id="dashboard"></div>
+        <p id="errorMsg"></p>
     </div>
 
-    <script src="/static/script.js"></script>
+    <!-- Placeholder for Dynamic Content -->
+    <div id="mainContent" style="display: none;"></div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const errorMsg = document.getElementById('errorMsg');
+        const loginContainer = document.getElementById('loginContainer');
+        const mainContent = document.getElementById('mainContent');
+
+        // Handle Login
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Basic username and password check
+            if (username === 'admin' && password === 'password123') {
+                // Hide the login form
+                loginContainer.style.display = 'none';
+
+                // Show the video upload dashboard
+                mainContent.style.display = 'block';
+                mainContent.innerHTML = `
+                    <div class="container">
+                        <h1>Huzaifa's TikTok</h1>
+
+                        <!-- Video Upload Form -->
+                        <form id="uploadForm">
+                            <label for="title">Video Title:</label>
+                            <input type="text" id="title" name="title" required><br>
+
+                            <label for="tags">Tags (comma-separated):</label>
+                            <input type="text" id="tags" name="tags" required><br>
+
+                            <label for="video">Upload Video:</label>
+                            <input type="file" id="video" name="video" accept="video/*" required><br>
+
+                            <button type="submit">Upload Video</button>
+                        </form>
+
+                        <hr>
+
+                        <!-- Video Dashboard -->
+                        <h2>Video Dashboard</h2>
+                        <div id="dashboard"></div>
+                    </div>
+                `;
+
+                // Attach upload functionality
+                attachUploadHandler();
+
+            } else {
+                errorMsg.textContent = 'Invalid username or password.';
+            }
+        });
+
+        // Function to handle video uploads
+        function attachUploadHandler() {
+            const uploadForm = document.getElementById('uploadForm');
+            const dashboard = document.getElementById('dashboard');
+
+            uploadForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const title = document.getElementById('title').value;
+                const tags = document.getElementById('tags').value;
+                const video = document.getElementById('video').files[0];
+
+                if (video) {
+                    const videoElement = document.createElement('div');
+                    videoElement.classList.add('video-item');
+                    videoElement.innerHTML = `
+                        <h3>${title}</h3>
+                        <p>Tags: ${tags}</p>
+                        <video width="320" height="240" controls autoplay>
+                            <source src="${URL.createObjectURL(video)}" type="${video.type}">
+                            Your browser does not support the video tag.
+                        </video>
+                        <hr>
+                    `;
+                    dashboard.appendChild(videoElement);
+
+                    // Reset the form
+                    uploadForm.reset();
+                } else {
+                    alert('Please select a video file to upload.');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
